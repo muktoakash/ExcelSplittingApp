@@ -65,6 +65,33 @@ class AppWindow(QWidget):
             self.status_bar = QStatusBar()
             self.layout['main'].addWidget(self.status_bar)
 
+    def browse_file(self):
+        file_path, _ = QFileDialog.getOpenFileName(self, 'Open File', '', 'Excel Files (*.xlsx)')
+        self.file_path.setText(file_path)
+
+        if file_path:
+            sheet_names = get_worksheet_names(file_path)
+
+            self.list_sheet_name.clear()
+
+            add_all_items = QListWidgetItem("Add All")
+            add_all_items.setFlags(add_all_items.flags() | Qt.ItemFlag.ItemIsUserCheckable)
+            add_all_items.setCheckState(Qt.CheckState.Unchecked)
+            self.list_sheet_name.addItem(add_all_items)
+
+            for sheet_name in sheet_names:
+                listWidgetItem = QListWidget(sheet_name)
+                listWidgetItem.setFlags(listWidgetItem.flags() | Qt.ItemFlag.ItemIsUserCheckable)
+                listWidgetItem.setCheckState(Qt.CheckState.Unchecked)
+                self.list_sheet_name.addItem(listWidgetItem)
+
+            if len(sheet_names) == 1:
+                self.status_bar.showMessage('Excel File has only one sheet. No need to split.')
+
+    def check_uncheck_all(self, item):
+        pass
+
+
 
 # Run
 if __name__ == '__main__':
