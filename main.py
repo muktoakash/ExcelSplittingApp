@@ -48,6 +48,23 @@ class AppWindow(QWidget):
             self.file_path = QLineEdit()
             self.layout['browse_file'].addWidget(self.file_path)
 
+            self.button_browse = QPushButton('Browse')
+            self.layout['browse_file'].addWidget(self.button_browse)
+
+            self.layout['form'].addRow('File Path: ', self.layout['browse_file'])
+
+            self.instant_search = QLineEdit()
+            self.layout['form'].addRow('Search: ' self.instant_search)
+
+            self.list_sheet_name = QListWidget()
+            self.layout['form'].addRow(self.list_sheet_name)
+
+            self.button_split = QPushButton('Split')
+            self.layout['form'].addRow(self.button_split)
+
+            self.status_bar = QStatusBar()
+            self.layout['main'].addWidget(self.status_bar)
+
 
 # Run
 if __name__ == '__main__':
