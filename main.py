@@ -21,8 +21,8 @@ def get_worksheet_names(file_path : str):
 
 class AppWindow(QWidget):
     """"""
-    def __init__(self, parent: QWidget | None = ..., flags: Qt.WindowType = ...) -> None:
-        super().__init__(parent, flags)
+    def __init__(self):
+        super().__init__()
         self.setWindowTitle('Excel File Splitter')
         self.window_width, self.window_height = 700, 50
         self.setMinimumSize(self.window_width, self.window_height)
@@ -89,7 +89,62 @@ class AppWindow(QWidget):
                 self.status_bar.showMessage('Excel File has only one sheet. No need to split.')
 
     def check_uncheck_all(self, item):
-        pass
+        if item.text() == "Add All":
+            for index in range(self.list_sheet_name.count()):
+               list_box_item = self.list_Sheet_name.item(index)
+               if list_box_item.text() != "Add All" and not list_box_item.isHidden():
+                   list_box_item.setCheckState(item.checkState())
+
+    def split_excel_file(self):
+        file_path = self.file_path.text()
+
+        if not file_path:
+            self.status_bar.showMessage
+            ('Please select an Excel file first.')
+
+        if self.list_sheet_name.count() == 2:
+                self.status_bar.showMessage('Excel file has only one sheet. No need to split.')
+                return
+
+        work_dir = os.getcwd()
+
+        checked_sheets = []
+        for index in range(self.list_sheet_name.count()):
+            if self.list_sheet_name.item(index).text() != 'Add All' and self.list_sheet_name.item(index).checkState() == Qt.CheckState.Checked:
+                checked_sheets.append(self.list_sheet_name.item(index).text())
+
+        if not checked_sheets:
+            self.status_bar.showMessage('Please select at least one sheet to split')
+            return
+
+        try:
+            excel_app = win32.Dispatch('Excel.Application')
+            excel_app.Visible = True
+            workbook = excel_app.Workbooks.Open(file_path)
+
+            for sheet_name in checked_sheets:
+                new_workbook = excel_app.Workbooks.Add()
+                workbook.Sheets(sheet_name).Copy(Before=new_workbook.Sheets(1))
+
+                excel_app.DixplayAlerts = False
+                new_workbook.Sheets(2).Delete()
+                excel_app.DisplayAlerts = True
+
+                valid_filename = re.sub(r'[\\/*?:<>|]', '_', sheet_name)
+                new_workbook.SaveAs(os.path.join(work_dir, valid_filename + '.xlsx'))
+                new_workbook.Close()
+
+            workbook.Close(SaveChange = False)
+            excel_app.Quit()
+
+            self.status_bar.showMessage('Excel file has been split successfully.')
+
+        except Exception as e:
+            self.status_bar.showMessage(str(e))
+            excel_app.DisplayAlerts = True
+            workbook.Close(SaveChanges = False)
+            excel_app.Quit()
+    
 
 
 
