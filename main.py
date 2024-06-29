@@ -145,10 +145,17 @@ class AppWindow(QWidget):
             workbook.Close(SaveChanges = False)
             excel_app.Quit()
 
-    def instant_search(self):
-        search_text = self.
+    def fcn_instant_search(self):
+        search_text = self.instant_search.text()
+        if not search_text:
+            for index in range(self.list_sheet_name.count()):
+                self.list_sheet_name.item(index).setHidden(False)
 
-
+        for index in range(self.list_sheet_name.count()):
+            if search_text.lower() in self.list_sheet_name.item(index).text().lower or self.list_sheet_name.item(index).text() == "Add All":
+                self.list_sheet_name.item(index).setHidden(True)
+            else:
+                self.list_sheet_name.item(index).setHidden(True)
 
 # Run
 if __name__ == '__main__':
