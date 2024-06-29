@@ -157,6 +157,11 @@ class AppWindow(QWidget):
             else:
                 self.list_sheet_name.item(index).setHidden(True)
 
+    def config_signals(self):
+        self.button_browse_clicked.connect(self.browse_file)
+        self.list_sheet_name.itemChanged.connect(self.check_uncheck_all)
+        self.button_split.clicked.connect(self.split_excel_file)
+        self.instant_search.textChanged.connect(self.fcn_instant_search)
 # Run
 if __name__ == '__main__':
     app = QApplication(sys.argv)
