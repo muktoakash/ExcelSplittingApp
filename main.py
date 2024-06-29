@@ -144,7 +144,9 @@ class AppWindow(QWidget):
             excel_app.DisplayAlerts = True
             workbook.Close(SaveChanges = False)
             excel_app.Quit()
-    
+
+    def instant_search(self):
+        search_text = self.
 
 
 
